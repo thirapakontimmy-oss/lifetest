@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>แบบประเมินพฤติกรรมสุขภาพ · เวชศาสตร์วิถีชีวิต</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --teal-900:#12332D;
+    --teal-700:#1D4E45;
+    --teal-500:#2E6E60;
+    --sage:#8FA998;
+    --sage-light:#DCE6DE;
+    --ochre:#C89B3C;
+    --ochre-light:#EFDDB0;
+    --cream:#F5F2EA;
+    --paper:#FBFAF6;
+    --ink:#26312E;
+    --ink-soft:#5C6B65;
+    --line:#DCD6C7;
+    --danger:#B5563F;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--cream);
+    color:var(--ink);
+    font-family:'Noto Sans Thai',sans-serif;
+    line-height:1.6;
+    padding:0 0 80px;
+  }
+  .wrap{max-width:880px;margin:0 auto;padding:0 20px;}
+
+  /* ---------- Header ---------- */
+  .masthead{
+    background:linear-gradient(155deg,var(--teal-900) 0%,var(--teal-700) 60%,var(--teal-500) 100%);
+    color:var(--paper);
+    padding:44px 20px 60px;
+    position:relative;
+    overflow:hidden;
+  }
+  .masthead::after{
+    content:"";
+    position:absolute; right:-60px; top:-60px;
+    width:280px;height:280px;border-radius:50%;
+    border:1px solid rgba(255,255,255,.12);
+  }
+  .masthead::before{
+    content:"";
+    position:absolute; right:20px; bottom:-90px;
+    width:220px;height:220px;border-radius:50%;
+    border:1px solid rgba(255,255,255,.09);
+  }
+  .eyebrow{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--ochre-light); margin-bottom:14px;
+  }
+  .masthead h1{
+    font-family:'Noto Serif Thai',serif;
+    font-weight:700;
+    font-size:clamp(28px,4vw,40px);
+    margin:0 0 8px;
+    max-width:640px;
+  }
+  .masthead p{
+    color:#CFE0D8; margin:0; max-width:520px; font-size:15px;
+  }
+
+  /* ---------- Progress wheel (signature element) ---------- */
+  .wheel-dock{
+    max-width:880px;margin:-34px auto 0; padding:0 20px;
+    display:flex; justify-content:flex-end;
+  }
+  .wheel-card{
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:18px;
+    box-shadow:0 14px 30px -18px rgba(18,51,45,.35);
+    padding:16px 18px 12px;
+    display:flex; align-items:center; gap:14px;
+  }
+  .wheel-card .label{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px; color:var(--ink-soft); letter-spacing:.06em;
+  }
+  .wheel-card .pct{
+    font-family:'Noto Serif Thai',serif; font-weight:700; font-size:22px; color:var(--teal-700);
+  }
+
+  /* ---------- Sections ---------- */
+  .card{
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:16px;
+    margin-top:22px;
+    padding:26px 26px 22px;
+  }
+  .section-title{
+    display:flex; align-items:baseline; gap:10px; margin-bottom:4px;
+  }
+  .section-num{
+    font-family:'IBM Plex Mono',monospace; color:var(--ochre); font-size:13px; font-weight:600;
+  }
+  .section-title h2{
+    font-family:'Noto Serif Thai',serif; font-size:20px; margin:0; color:var(--teal-900);
+  }
+  .section-sub{ color:var(--ink-soft); font-size:13.5px; margin:2px 0 20px;}
+
+  .field-row{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px;}
+  .field-row.single{grid-template-columns:1fr;}
+  label.f-label{display:block; font-size:13px; color:var(--ink-soft); margin-bottom:6px;}
+  input[type=text],input[type=date],select.plain{
+    width:100%; padding:10px 12px; border:1px solid var(--line); border-radius:9px;
+    font-family:'Noto Sans Thai',sans-serif; font-size:14.5px; background:#fff; color:var(--ink);
+  }
+  input:focus,select:focus{outline:2px solid var(--sage); outline-offset:1px; border-color:var(--teal-500);}
+
+  .gender-toggle{display:flex; gap:8px;}
+  .gender-toggle button{
+    flex:1; padding:10px; border:1px solid var(--line); background:#fff; border-radius:9px;
+    font-family:'Noto Sans Thai',sans-serif; cursor:pointer; font-size:14px; color:var(--ink);
+    transition:all .15s;
+  }
+  .gender-toggle button.active{background:var(--teal-700); color:#fff; border-color:var(--teal-700);}
+
+  /* Questions */
+  .question{ padding:18px 0; border-top:1px solid var(--line); }
+  .question:first-of-type{border-top:none; padding-top:6px;}
+  .q-head{display:flex; gap:10px; margin-bottom:12px;}
+  .q-idx{
+    flex:none; width:26px; height:26px; border-radius:50%;
+    background:var(--sage-light); color:var(--teal-900);
+    font-family:'IBM Plex Mono',monospace; font-size:12px; font-weight:600;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .q-text{font-size:15px; color:var(--ink);}
+  .q-note{font-size:12px; color:var(--ink-soft); margin-top:2px;}
+
+  .yn-group{display:flex; gap:10px; padding-left:36px;}
+  .yn-group button{
+    padding:9px 22px; border-radius:999px; border:1px solid var(--line);
+    background:#fff; font-family:'Noto Sans Thai',sans-serif; cursor:pointer; font-size:14px;
+    transition:all .15s;
+  }
+  .yn-group button.active{background:var(--ochre); border-color:var(--ochre); color:#fff;}
+
+  .scale-group{display:flex; flex-wrap:wrap; gap:8px; padding-left:36px;}
+  .scale-group button{
+    min-width:44px; padding:9px 10px; border-radius:9px; border:1px solid var(--line);
+    background:#fff; font-family:'IBM Plex Mono',monospace; font-size:13px; cursor:pointer;
+    color:var(--ink); transition:all .15s;
+  }
+  .scale-group button.active{background:var(--teal-700); border-color:var(--teal-700); color:#fff;}
+  .scale-group button:disabled{opacity:.35; cursor:not-allowed;}
+
+  .scale-endcaps{display:flex; justify-content:space-between; padding-left:36px; font-size:11px; color:var(--ink-soft); margin-top:6px;}
+
+  /* Submit */
+  .submit-row{display:flex; flex-direction:column; align-items:center; gap:10px; margin-top:30px;}
+  .submit-btn{
+    background:var(--teal-700); color:#fff; border:none; padding:14px 34px; border-radius:999px;
+    font-family:'Noto Sans Thai',sans-serif; font-size:15.5px; font-weight:600; cursor:pointer;
+    box-shadow:0 10px 24px -12px rgba(29,78,69,.55);
+  }
+  .submit-btn:hover{background:var(--teal-900);}
+  .warn{color:var(--danger); font-size:13px; text-align:center;}
+
+  /* ---------- Results ---------- */
+  #results{display:none;}
+  .result-hero{
+    background:linear-gradient(155deg,var(--teal-900),var(--teal-500));
+    color:#fff; border-radius:18px; padding:30px 26px; margin-top:24px;
+    display:flex; gap:26px; align-items:center; flex-wrap:wrap;
+  }
+  .result-hero .score-big{
+    font-family:'Noto Serif Thai',serif; font-weight:700; font-size:56px; line-height:1;
+  }
+  .result-hero .score-of{font-family:'IBM Plex Mono',monospace; font-size:14px; color:var(--sage-light);}
+  .result-hero .verdict{font-family:'Noto Serif Thai',serif; font-size:22px; margin:6px 0 6px;}
+  .result-hero .verdict-desc{font-size:14px; color:#DCEAE3; max-width:440px;}
+  .result-hero .badge{
+    font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.08em; text-transform:uppercase;
+    background:rgba(255,255,255,.14); padding:5px 12px; border-radius:999px; display:inline-block; margin-bottom:10px;
+  }
+
+  .cat-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:14px; margin-top:20px;}
+  .cat-card{background:var(--paper); border:1px solid var(--line); border-radius:14px; padding:16px 18px;}
+  .cat-card h3{font-family:'Noto Serif Thai',serif; font-size:15.5px; margin:0 0 8px; color:var(--teal-900);}
+  .bar-track{background:var(--sage-light); border-radius:999px; height:10px; overflow:hidden;}
+  .bar-fill{background:var(--ochre); height:100%; border-radius:999px; transition:width .6s ease;}
+  .cat-score{font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:var(--ink-soft); margin-top:6px;}
+
+  .reset-row{text-align:center; margin-top:26px;}
+  .reset-row button{
+    background:none; border:1px solid var(--line); color:var(--ink-soft); padding:10px 22px;
+    border-radius:999px; font-family:'Noto Sans Thai',sans-serif; cursor:pointer; font-size:13.5px;
+  }
+
+  @media(max-width:640px){
+    .field-row{grid-template-columns:1fr;}
+    .cat-grid{grid-template-columns:1fr;}
+    .wheel-dock{justify-content:center; margin-top:-24px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="masthead">
+  <div class="wrap">
+    <div class="eyebrow">Lifestyle Medicine · เวชศาสตร์วิถีชีวิต</div>
+    <h1>แบบประเมินพฤติกรรมสุขภาพ</h1>
+    <p>พิจารณาพฤติกรรมของท่านใน 1 สัปดาห์ที่ผ่านมา แล้วเลือกคำตอบที่ใกล้เคียงความจริงที่สุดในแต่ละข้อ ระบบจะประมวลผลคะแนนให้ทันทีเมื่อกรอกครบ</p>
+  </div>
+</div>
+
+<div class="wheel-dock">
+  <div class="wheel-card">
+    <svg id="wheelSvg" width="64" height="64" viewBox="0 0 64 64"></svg>
+    <div>
+      <div class="label">ความคืบหน้า</div>
+      <div class="pct" id="progressPct">0%</div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- Patient info -->
+  <div class="card">
+    <div class="section-title"><span class="section-num">ข้อมูลผู้รับการประเมิน</span></div>
+    <div class="section-sub">กรอกข้อมูลเบื้องต้นก่อนเริ่มทำแบบประเมิน</div>
+    <div class="field-row">
+      <div><label class="f-label">ชื่อ</label><input type="text" id="fname"></div>
+      <div><label class="f-label">สกุล</label><input type="text" id="lname"></div>
+    </div>
+    <div class="field-row">
+      <div><label class="f-label">HN</label><input type="text" id="hn"></div>
+      <div><label class="f-label">วันที่</label><input type="date" id="visitDate"></div>
+    </div>
+    <div class="field-row single">
+      <div><label class="f-label">การวินิจฉัย</label><input type="text" id="diag"></div>
+    </div>
+    <div class="field-row single">
+      <div>
+        <label class="f-label">เพศ (ใช้สำหรับคำนวณคะแนนข้อ 14 เรื่องแอลกอฮอล์)</label>
+        <div class="gender-toggle">
+          <button type="button" data-gender="male">ชาย</button>
+          <button type="button" data-gender="female">หญิง</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section A: yes/no -->
+  <div class="card">
+    <div class="section-title"><span class="section-num">ส่วนที่ 1</span><h2>พฤติกรรมทั่วไปในรอบ 1 สัปดาห์</h2></div>
+    <div class="section-sub">เลือก “ใช่” หรือ “ไม่ใช่” ตามความเป็นจริง</div>
+    <div id="ynQuestions"></div>
+  </div>
+
+  <!-- Section B: scale 8-15 -->
+  <div class="card">
+    <div class="section-title"><span class="section-num">ส่วนที่ 2</span><h2>ความถี่ / ปริมาณในรอบ 1 สัปดาห์</h2></div>
+    <div class="section-sub">เลือกตัวเลขที่ใกล้เคียงที่สุดในแต่ละข้อ</div>
+    <div id="scaleQuestions"></div>
+  </div>
+
+  <!-- Section C: q16 -->
+  <div class="card">
+    <div class="section-title"><span class="section-num">ส่วนที่ 3</span><h2>การออกกำลังกายแบบแอโรบิก</h2></div>
+    <div class="section-sub">รวมชั่วโมงต่อสัปดาห์ เช่น เดินเร็ว วิ่งเหยาะ ปั่นจักรยาน ว่ายน้ำ</div>
+    <div id="q16Question"></div>
+  </div>
+
+  <div class="submit-row">
+    <button class="submit-btn" id="submitBtn">ประมวลผลคะแนน</button>
+    <div class="warn" id="warnMsg"></div>
+  </div>
+
+  <!-- Results -->
+  <div id="results">
+    <div class="result-hero">
+      <div>
+        <div class="badge" id="verdictBadge">ผลการประเมิน</div>
+        <div class="score-big" id="scoreBig">0</div>
+        <div class="score-of">จาก 50 คะแนน</div>
+      </div>
+      <div>
+        <div class="verdict" id="verdictTitle"></div>
+        <div class="verdict-desc" id="verdictDesc"></div>
+      </div>
+    </div>
+
+    <div class="cat-grid" id="catGrid"></div>
+
+    <div class="reset-row"><button id="resetBtn">เริ่มทำแบบประเมินใหม่</button></div>
+  </div>
+
+</div>
+
+<script>
+/* ---------------- DATA ---------------- */
+const scaleLabels = ['<1','1','2','3','4','5','6','7','8','9','10+'];
+const q16Labels = ['<30 นาที','30 นาที','45 นาที','1 ชม','1.5 ชม','2 ชม','2.5 ชม','3 ชม','3.5 ชม','4 ชม','4.5 ชม','5+ ชม'];
+
+const ynQuestions = [
+  {id:1, text:'ส่วนใหญ่จะตื่นเช้ามาด้วยความรู้สึกสดชื่น กระปรี้กระเปร่า', yes:2, no:0, cat:'sleep'},
+  {id:2, text:'มักมีอาการหลับๆ ตื่นๆ', yes:0, no:2, cat:'sleep'},
+  {id:3, text:'มีกิจกรรมส่งเสริมฝึกจิตใจ ฝึกสมาธิ อย่างน้อย 2 ครั้ง (ทำสมาธิ สวดมนต์ เข้าโบสถ์)', yes:2, no:0, cat:'mental'},
+  {id:4, text:'รู้สึกว่าโดยปกติสามารถจัดการความเครียดได้อย่างดี', yes:3, no:0, cat:'mental'},
+  {id:5, text:'สามารถรับฟังความเห็นต่างของผู้อื่นเป็นส่วนใหญ่', yes:2, no:0, cat:'relationship'},
+  {id:6, text:'พูดคุยหรือพบปะกับเพื่อนสนิท คนในครอบครัว ≥ 3 ครั้ง', yes:3, no:0, cat:'relationship'},
+  {id:7, text:'สูบบุหรี่ บุหรี่ไฟฟ้า หรือสารระเหย', yes:0, no:6, cat:'smoke'},
+];
+
+const scaleQuestions = [
+  {id:8, text:'จำนวนมื้ออาหารที่กินอาหารนอกบ้านหรือซื้ออาหารกล่อง/ถุงนอกบ้าน ใน 1 สัปดาห์', unit:'มื้อ/สัปดาห์', cat:'eat',
+    scores:[1,1,1,1,0,0,0,0,0,0,0]},
+  {id:9, text:'จำนวนวันที่ออกกำลังกายแบบแรงต้านใน 1 สัปดาห์ (เช่น วิดพื้น ซิตอัพ สควอช)', unit:'วัน/สัปดาห์', cat:'exercise',
+    scores:[0,1,2,2,2,2,2,2,null,null,null]},
+  {id:10, text:'จำนวนแก้วที่ดื่มเครื่องดื่มรสหวานใน 1 สัปดาห์ (น้ำผลไม้ กาแฟ/ชารสหวาน น้ำอัดลม เครื่องดื่มเกลือแร่ เครื่องดื่มชูกำลัง)', unit:'แก้ว/สัปดาห์', cat:'eat',
+    scores:[3,3,1,0,0,0,0,0,0,0,0]},
+  {id:11, text:'จำนวนชั่วโมงการนอนต่อวัน', unit:'ชม./วัน', cat:'sleep',
+    scores:[0,0,0,0,0,0,0,5,6,6,6]},
+  {id:12, text:'กินผลไม้กี่ส่วนต่อวัน', unit:'ส่วน/วัน', cat:'eat',
+    scores:[0,0,0,2,3,2,2,0,0,0,0]},
+  {id:13, text:'จำนวนชั่วโมงที่นั่งอยู่กับที่ต่อวัน', unit:'ชม./วัน', cat:'exercise',
+    scores:[3,3,3,3,3,3,1,1,0,0,0]},
+  {id:14, text:'จำนวนดื่มมาตรฐาน (Standard Drink) ของเครื่องดื่มแอลกอฮอล์ต่อวัน (หากไม่ดื่มให้เลือก <1)', unit:'ดื่ม/วัน', cat:'smoke',
+    scores:[4,4,'gender',0,0,0,0,0,0,0,0]},
+  {id:15, text:'กินผักกี่ส่วนต่อวัน (1 ส่วน = ผักสุก 1 ทัพพี = ผักดิบ 2 ทัพพี)', unit:'ส่วน/วัน', cat:'eat',
+    scores:[0,0,1,1,2,2,3,3,3,2,2]},
+];
+
+const q16 = {id:16, text:'จำนวนชั่วโมงต่อสัปดาห์ที่ออกกำลังกายชนิดแอโรบิก', cat:'exercise',
+  scores:[0,1,1,2,3,4,5,5,5,5,5,5]};
+
+const categories = {
+  eat:      {label:'ด้านการกิน',            max:10},
+  exercise: {label:'ด้านการออกกำลังกาย',     max:10},
+  sleep:    {label:'ด้านการนอน',             max:10},
+  smoke:    {label:'ด้านบุหรี่ / แอลกอฮอล์',  max:10},
+  mental:   {label:'ด้านจิตใจ',              max:5},
+  relationship:{label:'ด้านความสัมพันธ์',    max:5},
+};
+
+const interpretations = [
+  {min:0, max:20, label:'ต่ำกว่าค่าเฉลี่ย', color:'#B5563F',
+   desc:'เป็นโอกาสดีที่จะได้รับคำแนะนำจากผู้เชี่ยวชาญ เพื่อช่วยให้คุณปรับวิถีชีวิตและพัฒนาสุขภาพให้ดีขึ้นได้อย่างชัดเจน'},
+  {min:21, max:30, label:'เท่าค่าเฉลี่ย', color:'#C89B3C',
+   desc:'คุณมีวิถีชีวิตที่เหมาะสมและดีในบางเรื่อง ซึ่งยังมีบางส่วนที่จะช่วยเสริมให้คุณมีสุขภาพดียิ่งขึ้น และลดความเสี่ยงการเกิดโรคในอนาคต'},
+  {min:31, max:40, label:'ดีมาก', color:'#2E6E60',
+   desc:'คุณมีวิถีชีวิตที่ดีต่อสุขภาพหลายด้าน มีเพียงส่วนน้อยที่ควรลองพิจารณาว่าจะสามารถพัฒนาให้ดียิ่งขึ้นไปได้อีกหรือไม่'},
+  {min:41, max:50, label:'ดีเยี่ยม', color:'#1D4E45',
+   desc:'คุณมีวิถีชีวิตที่ดีเยี่ยม มีเพียงจุดเล็กๆ น้อยๆ ที่คุณอาจเพิ่มเติมให้ดียิ่งขึ้นครบทุกด้าน'},
+];
+
+/* ---------------- STATE ---------------- */
+const answers = {}; // qid -> value (score or 'yes'/'no' index etc.)
+let gender = null;
+
+/* ---------------- RENDER ---------------- */
+const ynWrap = document.getElementById('ynQuestions');
+ynQuestions.forEach(q=>{
+  const div = document.createElement('div');
+  div.className='question';
+  div.innerHTML = `
+    <div class="q-head">
+      <div class="q-idx">${q.id}</div>
+      <div><div class="q-text">${q.text}</div></div>
+    </div>
+    <div class="yn-group" data-qid="${q.id}">
+      <button type="button" data-val="yes">ใช่</button>
+      <button type="button" data-val="no">ไม่ใช่</button>
+    </div>`;
+  ynWrap.appendChild(div);
+});
+
+const scaleWrap = document.getElementById('scaleQuestions');
+scaleQuestions.forEach(q=>{
+  const div = document.createElement('div');
+  div.className='question';
+  div.innerHTML = `
+    <div class="q-head">
+      <div class="q-idx">${q.id}</div>
+      <div><div class="q-text">${q.text}</div><div class="q-note">หน่วย: ${q.unit}</div></div>
+    </div>
+    <div class="scale-group" data-qid="${q.id}">
+      ${scaleLabels.map((lab,i)=>`<button type="button" data-idx="${i}" ${q.scores[i]===null?'disabled':''}>${lab}</button>`).join('')}
+    </div>`;
+  scaleWrap.appendChild(div);
+});
+
+const q16Wrap = document.getElementById('q16Question');
+q16Wrap.innerHTML = `
+  <div class="question" style="border-top:none;">
+    <div class="q-head">
+      <div class="q-idx">16</div>
+      <div><div class="q-text">${q16.text}</div></div>
+    </div>
+    <div class="scale-group" data-qid="16">
+      ${q16Labels.map((lab,i)=>`<button type="button" data-idx="${i}">${lab}</button>`).join('')}
+    </div>
+  </div>`;
+
+/* ---------------- INTERACTIONS ---------------- */
+document.querySelectorAll('.gender-toggle button').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.gender-toggle button').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    gender = btn.dataset.gender;
+    // re-evaluate q14 score if already answered
+    if(answers[14] !== undefined && answers[14].idx === 2){
+      answers[14].score = gender==='male' ? 4 : 0;
+    }
+    updateProgress();
+  });
+});
+
+document.querySelectorAll('.yn-group').forEach(group=>{
+  const qid = parseInt(group.dataset.qid);
+  const qdef = ynQuestions.find(q=>q.id===qid);
+  group.querySelectorAll('button').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      group.querySelectorAll('button').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      const val = btn.dataset.val;
+      answers[qid] = {score: val==='yes' ? qdef.yes : qdef.no, cat: qdef.cat};
+      updateProgress();
+    });
+  });
+});
+
+document.querySelectorAll('#scaleQuestions .scale-group, #q16Question .scale-group').forEach(group=>{
+  const qid = parseInt(group.dataset.qid);
+  const qdef = qid===16 ? q16 : scaleQuestions.find(q=>q.id===qid);
+  group.querySelectorAll('button').forEach(btn=>{
+    if(btn.disabled) return;
+    btn.addEventListener('click', ()=>{
+      group.querySelectorAll('button').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      const idx = parseInt(btn.dataset.idx);
+      let score = qdef.scores[idx];
+      if(score === 'gender'){
+        score = gender==='male' ? 4 : 0;
+      }
+      answers[qid] = {score, idx, cat: qdef.cat};
+      updateProgress();
+    });
+  });
+});
+
+/* ---------------- PROGRESS WHEEL ---------------- */
+const totalQuestions = ynQuestions.length + scaleQuestions.length + 1; // +q16
+function updateProgress(){
+  const answered = Object.keys(answers).length;
+  const pct = Math.round((answered/totalQuestions)*100);
+  document.getElementById('progressPct').textContent = pct + '%';
+  drawWheel(pct);
+}
+function drawWheel(pct){
+  const svg = document.getElementById('wheelSvg');
+  const r = 26, cx=32, cy=32;
+  const circ = 2*Math.PI*r;
+  const offset = circ * (1 - pct/100);
+  svg.innerHTML = `
+    <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#DCE6DE" stroke-width="7"/>
+    <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#C89B3C" stroke-width="7"
+      stroke-linecap="round" stroke-dasharray="${circ}" stroke-dashoffset="${offset}"
+      transform="rotate(-90 ${cx} ${cy})" style="transition:stroke-dashoffset .4s ease"/>
+  `;
+}
+drawWheel(0);
+
+/* ---------------- SUBMIT / SCORING ---------------- */
+document.getElementById('submitBtn').addEventListener('click', ()=>{
+  const warn = document.getElementById('warnMsg');
+  const missing = totalQuestions - Object.keys(answers).length;
+  if(gender===null){
+    warn.textContent = 'กรุณาเลือกเพศ เพื่อใช้คำนวณคะแนนข้อ 14';
+    return;
+  }
+  if(missing > 0){
+    warn.textContent = `ยังตอบไม่ครบ กรุณาตอบให้ครบทุกข้อ (เหลืออีก ${missing} ข้อ)`;
+    return;
+  }
+  warn.textContent = '';
+
+  const catTotals = {};
+  Object.keys(categories).forEach(k=>catTotals[k]=0);
+  Object.values(answers).forEach(a=>{ catTotals[a.cat] += a.score; });
+
+  const grandTotal = Object.values(catTotals).reduce((s,v)=>s+v,0);
+
+  renderResults(grandTotal, catTotals);
+});
+
+function renderResults(total, catTotals){
+  const res = document.getElementById('results');
+  res.style.display = 'block';
+
+  document.getElementById('scoreBig').textContent = total;
+  const interp = interpretations.find(r=> total>=r.min && total<=r.max) || interpretations[0];
+  document.getElementById('verdictBadge').textContent = 'ผลการประเมิน · ' + interp.label;
+  document.getElementById('verdictTitle').textContent = interp.label + ' (' + interp.min + '–' + interp.max + ' คะแนน)';
+  document.getElementById('verdictDesc').textContent = interp.desc;
+
+  const grid = document.getElementById('catGrid');
+  grid.innerHTML = '';
+  Object.entries(categories).forEach(([key,def])=>{
+    const score = catTotals[key];
+    const pct = Math.round((score/def.max)*100);
+    const div = document.createElement('div');
+    div.className='cat-card';
+    div.innerHTML = `
+      <h3>${def.label}</h3>
+      <div class="bar-track"><div class="bar-fill" style="width:${pct}%"></div></div>
+      <div class="cat-score">${score} / ${def.max} คะแนน</div>
+    `;
+    grid.appendChild(div);
+  });
+
+  res.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+document.getElementById('resetBtn').addEventListener('click', ()=>{
+  location.reload();
+});
+</script>
+</body>
+</html>
